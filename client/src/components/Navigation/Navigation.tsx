@@ -1,14 +1,12 @@
 import { FC, useContext, useEffect } from "react";
+import { useAccount } from 'wagmi';
 import { ConnectContext } from "../../context/ConnectContext";
+
 import logoSVG from '../../images/logo1.svg';
 
 export const Navigation: FC = () => {
 
-  const { connectedAccount } = useContext(ConnectContext);
-
-  useEffect(() => {
-    console.log(connectedAccount);
-  },[]);
+  const { address, isConnected } = useAccount();
 
   return(
     <nav className="w-full h-24 flex justify-center">
@@ -18,11 +16,13 @@ export const Navigation: FC = () => {
           <img src={logoSVG} alt="logo" />
         </div>
 
-        <div className="text-white">
-          <p>
-            0x..ff23f
-          </p>
-        </div>
+        {address ? (
+          <div className="text-white">
+            <p>
+              {address.slice(0,4)}...{address.slice(address.length - 4)}
+            </p>
+          </div>
+        ) : null}
       </div>
     </nav>
   )

@@ -1,9 +1,12 @@
 import { createContext, FC, ReactNode, useState } from "react";
+import { useAccount, useConnect } from 'wagmi'
+import { InjectedConnector } from 'wagmi/connectors/injected'
+
 import { ConnectContextInterface } from "../interfaces/ConnectContextInterface";
 
 
 export const ConnectContext = createContext<ConnectContextInterface>({
-  connectedAccount: "",
+  connectWallet: () => {}
 });
 
 interface Props {
@@ -12,11 +15,17 @@ interface Props {
 
 export const ConnectContextProvider: FC<Props> = ({ children }) => {
 
-  const [connectedAccount, setConnectedAccount] = useState<string>("");
+  const { connect } = useConnect({
+    connector: new InjectedConnector()
+  })
+
+  const connectWallet = () => {
+    connect();
+  }
 
   return (
     <ConnectContext.Provider value={{
-      connectedAccount,
+      connectWallet
     }}>
       {children}
     </ConnectContext.Provider>

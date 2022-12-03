@@ -1,7 +1,13 @@
-import { FC } from "react";
+import { FC, useContext } from "react";
+import { ConnectContext } from "../../context/ConnectContext";
+import { useAccount } from 'wagmi';
+
 import logoNFT from '../../images/logo.jpg';
 
 export const MintSection: FC = () => {
+
+  const { connectWallet } = useContext(ConnectContext);
+  const { address } = useAccount();
 
   return(
     <div className="w-full h-[80vh] flex items-center justify-center">
@@ -33,9 +39,21 @@ export const MintSection: FC = () => {
           <div className="flex items-center pt-10 text-white">
             <div className="border-[1px] w-5 h-20 border-r-0 border-gray-400 ml-20"></div>
 
-            <button className="bg-gradient-to-r from-[#009dfe] h-12 w-48 to-[#007bc7] px-7 font-semibold">
-              Connect Wallet
-            </button>
+            {!address ? (
+              <button 
+                className="bg-gradient-to-r from-[#009dfe] h-12 w-48 to-[#007bc7] px-7 font-semibold"
+                onClick={connectWallet}
+              >
+                Connect Wallet
+              </button>
+            ) : (
+              <button 
+                className="bg-gradient-to-r from-[#009dfe] h-12 w-48 to-[#007bc7] px-7 font-semibold"
+                onClick={() => {}}
+              >
+                Mint
+              </button>
+            )}
 
             <div className="border-[1px] w-5 h-20 border-l-0 border-gray-400 mr=20"></div>
           </div>

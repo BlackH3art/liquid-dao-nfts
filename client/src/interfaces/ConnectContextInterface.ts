@@ -1,3 +1,3 @@
 export interface ConnectContextInterface {
-  connectedAccount: string;
+  connectWallet: () => void;
 }
