@@ -7,3 +7,7 @@
   padding: 0;
   box-sizing: border-box;
 }
+
+.background-container {
+  background-image: url('./images/liquid-bg.jpg');
+}
