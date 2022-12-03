@@ -5,6 +5,7 @@ import { MintSection } from "./components/MintSection/MintSection";
 import { Navigation } from "./components/Navigation/Navigation";
 import { RandomSection } from "./components/RandomSection/RandomSection";
 
+
 export const App: FC = () => {
 
   return (

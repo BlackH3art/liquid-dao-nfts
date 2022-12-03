@@ -11,3 +11,7 @@
 .background-container {
   background-image: url('./images/liquid-bg.jpg');
 }
+
+h1, h2, h3 {
+  font-family: 'League Gothic', sans-serif;
+}
