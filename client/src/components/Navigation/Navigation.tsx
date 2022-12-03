@@ -1,7 +1,14 @@
-import { FC } from "react";
+import { FC, useContext, useEffect } from "react";
+import { ConnectContext } from "../../context/ConnectContext";
 import logoSVG from '../../images/logo1.svg';
 
 export const Navigation: FC = () => {
+
+  const { connectedAccount } = useContext(ConnectContext);
+
+  useEffect(() => {
+    console.log(connectedAccount);
+  },[]);
 
   return(
     <nav className="w-full h-24 flex justify-center">
