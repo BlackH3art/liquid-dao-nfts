@@ -10,7 +10,7 @@ export const MintSection: FC = () => {
   const { address } = useAccount();
 
   return(
-    <div className="w-full h-[80vh] flex items-center justify-center">
+    <div className="w-full h-[90vh] flex items-center justify-center">
       <div className="w-full lg:w-3/5 flex">
 
         <div className="w-1/2 flex flex-col text-white">
