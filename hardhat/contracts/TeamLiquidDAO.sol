@@ -2,12 +2,16 @@
 pragma solidity ^0.8.10;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
+import "./TeamLiquidNFTsInterface.sol";
 
 contract TeamLiquidDAO is Ownable {
 
   constructor() {
     proposalCount = 0;
+    teamLiquidNFTs = TeamLiquidNFTsInterface(0x63B7eeaD4d9F0c99e1F8Bd2D4763c61B6acee5f3);
   }
+
+  TeamLiquidNFTsInterface teamLiquidNFTs;
 
   struct Proposal {
     string question;
@@ -20,7 +24,7 @@ contract TeamLiquidDAO is Ownable {
     uint256 votesB;
     uint256 votesC;
     uint256 votesD;
-    mapping(uint256 => bool) voters;
+    mapping(address => bool) voters;
   }
 
   enum Vote {
@@ -56,21 +60,36 @@ contract TeamLiquidDAO is Ownable {
   }
 
 
-  function voteOnActiveProposal(Vote vote) external {
+  function voteOnActiveProposal(Vote vote) external onlyNftHolder voteOnlyOnce {
 
     Proposal storage activeProposal = proposals[proposalCount - 1];
+    uint256 voteWeight = teamLiquidNFTs.balanceOf(msg.sender);
 
     if(vote == Vote.A) {
-      activeProposal.votesA++;
+      activeProposal.votesA += voteWeight;
 
     } else if(vote == Vote.B) {
-      activeProposal.votesB++;
+      activeProposal.votesB += voteWeight;
 
     } else if(vote == Vote.C) {
-      activeProposal.votesC++;
+      activeProposal.votesC += voteWeight;
 
     } else if(vote == Vote.D) {
-      activeProposal.votesD++;
+      activeProposal.votesD += voteWeight;
     }
+  }
+
+  // ------------------------------------------------------------
+  //                         MODIFIERS 
+  // ------------------------------------------------------------
+
+  modifier onlyNftHolder() {
+    require(teamLiquidNFTs.balanceOf(msg.sender) > 0, "Not an NFT holder");
+    _;
+  }
+
+  modifier voteOnlyOnce() {
+    require(proposals[proposalCount - 1].voters[msg.sender] != true, "Already voted");
+    _;
   }
 }
