@@ -1,13 +1,34 @@
 import { FC, useContext } from "react";
 import { ConnectContext } from "../../context/ConnectContext";
-import { useAccount } from 'wagmi';
+import { useAccount, useContractWrite, usePrepareContractWrite } from 'wagmi';
+
+import { ClipLoader } from 'react-spinners';
+import { toast } from 'react-toastify';
 
 import logoNFT from '../../images/logo.jpg';
+import { NFTContractABI, NFTContractAddress } from "../../constants/contractNFT";
 
 export const MintSection: FC = () => {
 
   const { connectWallet } = useContext(ConnectContext);
   const { address } = useAccount();
+
+  const { config } = usePrepareContractWrite({
+    address: NFTContractAddress,
+    abi: NFTContractABI,
+    functionName: "mintNft"
+  });
+  const { isSuccess, isLoading, write: mintNft, isError } = useContractWrite(config);
+
+  const handleMint = () => {
+    mintNft?.();
+  }
+
+  if(isSuccess) {
+    toast.success("NFT minted! Check out your wallet", { theme: "colored" });
+  } else if (isError) {
+    toast.error("Mint not successfull, try again", { theme: "colored" });
+  }
 
   return(
     <div className="w-full h-[90vh] flex items-center justify-center">
@@ -48,10 +69,10 @@ export const MintSection: FC = () => {
               </button>
             ) : (
               <button 
-                className="bg-gradient-to-r from-[#009dfe] h-12 w-48 to-[#007bc7] px-7 font-semibold"
-                onClick={() => {}}
+                className="flex items-center justify-center bg-gradient-to-r from-[#009dfe] h-12 w-48 to-[#007bc7] px-7 font-semibold"
+                onClick={handleMint}
               >
-                Mint
+                {isLoading ? <ClipLoader color="white" size={24}/> : "Mint"}
               </button>
             )}
 
