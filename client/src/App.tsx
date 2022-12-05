@@ -1,5 +1,8 @@
 import { FC } from "react";
 
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 import { DaoSection } from "./components/DaoSection/DaoSection";
 import { MintSection } from "./components/MintSection/MintSection";
 import { Navigation } from "./components/Navigation/Navigation";
@@ -10,6 +13,8 @@ export const App: FC = () => {
 
   return (
     <div className="h-[100vh]">
+
+      <ToastContainer />
 
       <div className="background-container w-full h-full fixed bg-top bg-cover bg-no-repeat"></div>
       

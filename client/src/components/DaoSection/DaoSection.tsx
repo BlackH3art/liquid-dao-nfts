@@ -1,31 +1,78 @@
 import { FC, useContext, useState } from "react";
+import { useAccount, useContractRead, usePrepareContractWrite, useContractWrite } from "wagmi";
+
+import { ConnectContext } from "../../context/ConnectContext";
 
 import { Option } from "./Option";
+import { ClipLoader } from 'react-spinners';
+import { toast } from 'react-toastify';
 
 import nitr0 from '../../images/1nitr0.jpg';
 import elige from '../../images/2EliGE.jpg';
 import osee from '../../images/3oSee.jpg';
 import naf from '../../images/4NAF.jpg';
-import { ConnectContext } from "../../context/ConnectContext";
-import { useAccount } from "wagmi";
+import { DAOContractABI, DAOContractAddress } from "../../constants/contractDAO";
 
 interface OptionInterface {
   option: number;
   img: string;
   description: string;
+  votes: string;
 }
 
 export const DaoSection: FC = () => {
 
   const { connectWallet } = useContext(ConnectContext);
   const { address } = useAccount();
-  const [selectedOption, setSelectedOption] = useState<OptionInterface | null>(null);
+  const [selectedOption, setSelectedOption] = useState<OptionInterface>({
+    option: 99,
+    img: "",
+    description: "", 
+    votes: ""
+  });
+
+  const DAOContractData = {
+    address: DAOContractAddress,
+    abi: DAOContractABI
+  }
+
+  const { data: proposalCount }: any = useContractRead({
+    ...DAOContractData,
+    functionName: "proposalCount"
+  });
+  const { data: proposal }: any = useContractRead({
+    ...DAOContractData,
+    functionName: "proposals",
+    args: [proposalCount - 1]
+  });
+
+  const { config } = usePrepareContractWrite({
+    ...DAOContractData,
+    functionName: "voteOnActiveProposal",
+    args: [selectedOption.option - 1]
+  });
+  const { isSuccess, isLoading, write: voteOnActiveProposal, isError } = useContractWrite(config);
+
+  const handleVote = () => {
+    if(!selectedOption.description) {
+      return toast.error("Select one option", { theme: "colored" });
+    }
+    voteOnActiveProposal?.();
+  }
+
+
+  if(isSuccess) {
+    toast.success("Your vote was submitted!", { theme: "colored" });
+  } else if (isError) {
+    toast.error("Vote was not successfull, try again", { theme: "colored" });
+  }
+  
 
   const options: OptionInterface[] = [
-    { option: 1, img: nitr0, description: "nitr0"},
-    { option: 2, img: elige, description: "EliGE"},
-    { option: 3, img: osee, description: "oSee"},
-    { option: 4, img: naf, description: "NAF"}
+    { option: 1, img: nitr0, description: proposal.optionA, votes: proposal.votesA },
+    { option: 2, img: elige, description: proposal.optionB, votes: proposal.votesB },
+    { option: 3, img: osee, description: proposal.optionC, votes: proposal.votesC },
+    { option: 4, img: naf, description: proposal.optionD, votes: proposal.votesD }
   ]
 
   return(
@@ -37,7 +84,7 @@ export const DaoSection: FC = () => {
         </h1>
 
         <p className="text-xl pt-10 text-center">
-          With which our player would you like to play 1v1 on special Team Liquid event?
+          {proposal.question}
         </p>
 
         <div className="pt-10">
@@ -49,6 +96,7 @@ export const DaoSection: FC = () => {
               description={item.description}
               handler={() => setSelectedOption(item)}
               active={selectedOption?.option === item.option}
+              votes={parseInt(item.votes)}
             />
           ))}
         </div>
@@ -65,10 +113,10 @@ export const DaoSection: FC = () => {
             </button>
           ) : (
             <button 
-              className="bg-gradient-to-r from-[#009dfe] h-12 w-48 to-[#007bc7] px-7 font-semibold"
-              onClick={() => {}}
+              className="flex items-center justify-center bg-gradient-to-r from-[#009dfe] h-12 w-48 to-[#007bc7] px-7 font-semibold"
+              onClick={handleVote}
             >
-              Vote
+              {isLoading ? <ClipLoader color="white" size={24} /> : "Vote"}
             </button>
           )}
 
