@@ -6,9 +6,10 @@ interface Props {
   description: string;
   handler: () => void;
   active: boolean;
+  votes: number;
 }
 
-export const Option: FC<Props> = ({ option, img, description, handler, active }) => {
+export const Option: FC<Props> = ({ option, img, description, handler, active, votes }) => {
 
   return(
     <div className={`flex w-3/5 border-[1px] h-28 my-2 mx-auto border-gray-400 backdrop-blur-md ${active ? "bg-green-500/30 border-green-500 border-2" : "bg-white/10"}`} onClick={handler}>
@@ -21,9 +22,15 @@ export const Option: FC<Props> = ({ option, img, description, handler, active })
         {option}.
       </div>
 
-      <div className="w-3/5 flex items-center">
+      <div className="w-2/5 flex items-center">
         <p>
           {description}
+        </p>
+      </div>
+
+      <div className="w-1/5 flex items-center font-light">
+        <p>
+          votes: {votes}
         </p>
       </div>
     </div>
