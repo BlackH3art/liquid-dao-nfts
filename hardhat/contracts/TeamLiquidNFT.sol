@@ -2,6 +2,7 @@
 pragma solidity ^0.8.10;
 
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import "@openzeppelin/contracts/utils/Strings.sol";
 import "base64-sol/base64.sol";
 
 contract TeamLiquidNFTs is ERC721 {
@@ -25,6 +26,9 @@ contract TeamLiquidNFTs is ERC721 {
   }
 
   function tokenURI(uint256) public view override returns (string memory) {
+
+    string memory name = string(abi.encodePacked("Team Liquid NFT #", Strings.toString(tokenCounter)));
+
     return
       string(
         abi.encodePacked(
@@ -33,7 +37,7 @@ contract TeamLiquidNFTs is ERC721 {
             bytes(
               abi.encodePacked(
                 '{"name":"',
-                name(),
+                name,
                 '", "description":"Team Liquid Fan NFTs, make your voice count!", ',
                 '"image":"',
                 IMAGE_URI,
