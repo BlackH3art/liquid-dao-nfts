@@ -38,6 +38,15 @@ contract TeamLiquidDAO is Ownable {
   mapping(uint256 => Proposal) public proposals;
   uint256 public proposalCount;
 
+  event VoteCasted();
+  event AddedProposal(uint256 proposalCount);
+
+
+
+
+  // ------------------------------------------------------------
+  //                    OWNER INTERFACE
+  // ------------------------------------------------------------
 
   function createProposal(
     string memory question, 
@@ -56,14 +65,23 @@ contract TeamLiquidDAO is Ownable {
     newProposal.optionC = optionC;
     newProposal.optionD = optionD;
 
+    emit AddedProposal(proposalCount);
+
     proposalCount++;
   }
 
+
+
+
+  // ------------------------------------------------------------
+  //                    HOLDER INTERFACE
+  // ------------------------------------------------------------
 
   function voteOnActiveProposal(Vote vote) external onlyNftHolder voteOnlyOnce {
 
     Proposal storage activeProposal = proposals[proposalCount - 1];
     uint256 voteWeight = teamLiquidNFTs.balanceOf(msg.sender);
+    activeProposal.voters[msg.sender] = true;
 
     if(vote == Vote.A) {
       activeProposal.votesA += voteWeight;
@@ -77,6 +95,8 @@ contract TeamLiquidDAO is Ownable {
     } else if(vote == Vote.D) {
       activeProposal.votesD += voteWeight;
     }
+
+    emit VoteCasted();
   }
 
   // ------------------------------------------------------------

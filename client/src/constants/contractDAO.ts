@@ -1,9 +1,24 @@
-export const DAOContractAddress = "0xAED8a2967A8413A3CA7E67089521721d12AD22b3";
+// export const DAOContractAddress = "0xAED8a2967A8413A3CA7E67089521721d12AD22b3"; // old
+// export const DAOContractAddress = "0xcF01ad6CF1df4aA47ecfC8d56250b6EcB4fA4A3C"; // old 2
+export const DAOContractAddress = "0x053928BfA9B158a707F76A4Cd1c710bAFC29f037"; // old 2
 export const DAOContractABI = [
   {
     "inputs": [],
     "stateMutability": "nonpayable",
     "type": "constructor"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "proposalCount",
+        "type": "uint256"
+      }
+    ],
+    "name": "AddedProposal",
+    "type": "event"
   },
   {
     "anonymous": false,
@@ -22,6 +37,12 @@ export const DAOContractABI = [
       }
     ],
     "name": "OwnershipTransferred",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [],
+    "name": "VoteCasted",
     "type": "event"
   },
   {
