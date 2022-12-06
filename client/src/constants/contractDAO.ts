@@ -1,5 +1,6 @@
 // export const DAOContractAddress = "0xAED8a2967A8413A3CA7E67089521721d12AD22b3"; // old
-export const DAOContractAddress = "0xcF01ad6CF1df4aA47ecfC8d56250b6EcB4fA4A3C"; 
+// export const DAOContractAddress = "0xcF01ad6CF1df4aA47ecfC8d56250b6EcB4fA4A3C"; // old 2
+export const DAOContractAddress = "0x053928BfA9B158a707F76A4Cd1c710bAFC29f037"; // old 2
 export const DAOContractABI = [
   {
     "inputs": [],
